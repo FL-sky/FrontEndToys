@@ -1,0 +1,11 @@
+{
+    "extends": "standard",
+    "plugins": [
+        "standard"
+    ],
+    "rules": {
+        "semi": 0,
+        "quotes": ["error", "single"],
+        "no-trailing-spaces": 0
+    }
+}
