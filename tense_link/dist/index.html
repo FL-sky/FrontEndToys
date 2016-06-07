@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <title>时态连连看</title>
+  </head>
+
+  <body>
+  <div id="mode-init" class="">
+    <button data-mode="1">计时模式</button>
+    <button data-mode="2">辨析模式</button>
+  </div>
+  <div id="welcome" class="animated">
+  </div>
+  <section class="container" id="play-ground">
+    <div id="status-bar">
+      <div class="home"><a></a></div>
+      <div class="status">level <span id="level-num"></span></div>
+      <div class="status">用时 <span id="used-time"></span> S</div>
+      <div id="pause-btn" class="pause"></div>
+    </div>
+    <div id="life-box">
+      
+    </div>
+    <div id="game-box">
+    </div>
+  </section>
+  <section class="container hide" id="end-report">
+    <div class="report">
+      <p class="report-title"><span>正确单词</span></p>
+      <p class="report-data">0</p>
+    </div>
+    <div class="report">
+      <p class="report-title"><span>LEVEL</span></p>
+      <p class="report-data">0</p>
+    </div>
+    <div class="report">
+      <p class="report-title"><span>错题复习</span></p>
+      <table id="error-words">
+        <tr><td>升高</td><td>arise</td><td>arose</td><td>arisen</td></tr>
+        <tr><td>升高</td><td>arise</td><td>arose</td><td>arisen</td></tr>
+        <tr><td>升高</td><td>arise</td><td>arose</td><td>arisen</td></tr>
+      </table>
+    </div>
+    <div class="report-btn-group">
+      <button class="btn btn-replay" id='replay-btn'>继续复习</button>
+      <button class="btn btn-back" id="back-btn">返回</button>
+    </div>
+  </section>
+  <script src="./tense_link.js"></script>
+  </body>
+</html>

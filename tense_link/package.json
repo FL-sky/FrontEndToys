@@ -1,21 +1,21 @@
 {
-  "name": "word_down",
+  "name": "phrase_link",
   "version": "1.0.0",
-  "description": "word dowm game",
+  "description": "phrase link",
   "main": "index.js",
   "scripts": {
-    "build": "set NODE_ENV=production&&webpack --progress --colors",
-    "dev": "webpack-dev-server --devtool --hot --content-base dist --host 0.0.0.0 --inline",
+    "build": "set NODE_ENV=production && webpack --progress --colors",
+    "dev": "webpack-dev-server --devtool --hot --content-base dist --host 0.0.0.0 --port 9000 --inline",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "word",
-    "game"
+    "phrase"
   ],
   "author": "Rayn",
   "license": "ISC",
   "devDependencies": {
-    "babel-core": "^6.9.0",
+    "autoprefixer": "^6.3.6",
+    "babel-core": "^6.9.1",
     "babel-loader": "^6.2.4",
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-stage-0": "^6.5.0",
@@ -27,6 +27,7 @@
     "file-loader": "^0.8.5",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
+    "postcss-loader": "^0.9.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",

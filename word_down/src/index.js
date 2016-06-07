@@ -1,24 +1,28 @@
-import { genRandomOption, randomSort } from './utils';
+import { genRandomOption, randomSort, showAnimate } from './utils';
 import './style.less';
+import { requestWord, sendHasLearned } from './data';
 
 class WordDown {
-  constructor (doms, words) {
+  constructor (doms) {
     // 数据
     this.rightNum = 0;
     this.usedTime = 0;
     
     // 状态
+    this.request = true;
     this.process = false;
     this.falling = false;
 
     // 关联 DOM 对象
     this.refs = doms;
-    this.liveHeight = document.body.clientHeight - 120;
+    this.liveHeight = 0;
+    this.rowHeight = 0;
     
     // 单词数据
-    this.wordObjects = words;
-    this.topics = [];
-    this.curTopics = null;
+    this.wordObjects = [];
+    this.curTopic = null;
+    this.curAudioEle = null;
+    this.learned = [];
     
     // Timer
     this.timerId = null;
@@ -26,35 +30,50 @@ class WordDown {
     this.downSpeed = 200;
     this.startTime = 0;
     this.endTime = 0;
+    
+    // 构建初始化
+    this.initEvent();
   }
 
-  init () {
-    this.initStatusBar();
-    this.refs.welcome.style.height = this.liveHeight + 'px';
-    this.refs.gameBox.style.height = this.liveHeight + 'px';
-    this.initWords();
-    this.initEvent();
-    this.initStatusBar();
-  }
-  
-  initWords () {
+  genOptions () {
     const length = this.wordObjects.length;
     for (let i = 0; i < length; ++i) {
       let curWord = this.wordObjects[i];
-      if (curWord.topicContent.optionMean1 === '') {
-        const options = genRandomOption(this.wordObjects, i, 2);
+      if (!curWord.option1) {
+        const options = genRandomOption(this.wordObjects, curWord.id, 2);
         if (options) {
-          curWord.topicContent.optionMean1 = this.wordObjects[options[0]].topicContent.wordMean;
-          curWord.topicContent.optionMean2 = this.wordObjects[options[1]].topicContent.wordMean;
+          curWord.option1 = this.wordObjects[options[0]].mean_word;
+          curWord.option2 = this.wordObjects[options[1]].mean_word;
         }
       }
     }
+    randomSort(this.wordObjects);
+  }
+
+  requestTopics (callback) {
+    this.request = true;
+    requestWord({
+      success: (response) => {
+        if (response.error_code === 0) {
+          this.request = false;
+          this.wordObjects = this.wordObjects.concat(response.terms);
+          this.genOptions();
+          if (callback) {
+            callback.call(this);
+          }
+        }
+      },
+      error: (response) => {
+        console.log('error request');
+        this.stop();
+      }
+    });
   }
   
   initEvent () {
     // welcome 开始
     this.refs.welcome.addEventListener('click', () => {
-      if (!this.process) {
+      if (!this.process && !this.request) {
         this.start();
       }
     }, false);
@@ -75,37 +94,44 @@ class WordDown {
     }, false);
     // 底部选项
     this.refs.optionsTable.addEventListener('click', (event) => {
-      if (event.target.classList.contains('option') && this.falling) {
+      if (event.target.classList.contains('option') && this.falling && this.process) {
         this.checkAnswer(event.target);
       }
       event.stopPropagation();
-    });
-  }
-  
-  fetchWords () {
-    if (this.wordObjects.length <= 0) {
-      this.stop();
-    }
-    if (this.topics.length > 0) {
-      this.wordObjects = this.wordObjects.concat(this.topics);
-      this.topics = [];
-    }
-    for (let i = 0; i < 20 && this.wordObjects.length > 0; ++i) {
-      this.topics.push(this.wordObjects.shift());
-    }
-    randomSort(this.topics);
+    }, false);
+    // 掉落单词点击播放音频
+    this.refs.downWord.addEventListener('click', (event) => {
+      this.playWordAudio();
+    }, false);
   }
   
   initStatusBar () {
-    this.rightNum = 0;
-    this.usedTime = 0;
+    this.rightNum = this.usedTime = 0;
     this.refs.rightNumBar.textContent = this.rightNum;
     this.refs.usedTimeBar.textContent = this.usedTime;
   }
   
+  computeHeight () {
+    let rootElement = document.documentElement;
+    rootElement.style.fontSize = rootElement.clientWidth / 3.20 + 'px';
+    this.rowHeight = this.refs.optionsTable.clientHeight;
+    this.liveHeight = rootElement.clientHeight - this.rowHeight * 3;
+    this.refs.welcome.style.height = this.liveHeight + 'px';
+    this.refs.gameBox.style.height = this.liveHeight + 'px';
+  }
+  
+  initView () {
+    this.computeHeight();
+    this.refs.wrongBlock.style.height = 0;
+    this.refs.welcome.classList.remove('hide');
+    this.refs.gameBox.classList.add('hide');
+    this.refs.playGround.classList.remove('hide');
+    this.refs.endReport.classList.add('hide');
+  }
+
   initOptionsTable () {
     const length = this.refs.optionBoxes.length;
-    for (let i = 0, j = 0; i < length; ++i) {
+    for (let i = 0; i < length; ++i) {
       this.refs.optionBoxes[i].classList.remove('right');
       this.refs.optionBoxes[i].classList.remove('wrong');
       this.refs.optionBoxes[i].textContent = '';
@@ -125,7 +151,7 @@ class WordDown {
   
   makeWordDown (wordEle) {
     let originTop = parseInt(wordEle.style.top.replace('px', ''));
-    if (originTop + 30 >= this.liveHeight) {
+    if (originTop + this.rowHeight >= this.liveHeight) {
       this.checkAnswer(this.refs.optionBoxes[1]);
     } else {
       originTop += 5;
@@ -143,48 +169,58 @@ class WordDown {
     }
   }
   
+  prepare () {
+    this.initStatusBar();
+    this.initView();
+    this.initOptionsTable();
+  }
+  
   start () {
     console.log('game start');
     this.process = true;
     this.refs.welcome.classList.add('hide');
     this.refs.gameBox.classList.remove('hide');
-    this.fetchWords();
+    // 开始计时
     this.startTime = Date.now();
     this.timerId = setInterval(() => {
       this.increaseTime();
     }, 1000);
-    this.refs.wrongBlock.style.height = 0;
-    this.liveHeight = document.body.clientHeight - 120;
-    this.showTopic();
+    // 开始掉落单词
+    this.showWordTopic();
   }
   
   replay () {
-    console.log('game restart');
-    this.refs.endReport.classList.add('hide');
-    
-    this.refs.welcome.classList.remove('hide');
-    this.refs.gameBox.classList.add('hide');
-    this.initStatusBar();
-    this.initOptionsTable();
-    this.refs.playGround.classList.remove('hide');
+    console.log('game replay');
+    this.startTime = Date.now();
+    this.requestTopics();
+    this.prepare();
   }
   
   stop () {
     console.log('game stop');
     this.process = false;
+    // 停止计时
+    this.endTime = Date.now();
     clearInterval(this.timerId);
     if (this.falling) {
       clearInterval(this.downTimerId);
     }
-    this.endTime = Date.now();
+    // 发送已学到服务端
+    console.log(this.learned);
+    sendHasLearned({
+      ids: this.learned
+    });
+    // 显示结束报告页面
+    let diff = (this.endTime - this.startTime) / 1000;
     this.refs.reportData[0].textContent = this.rightNum;
-    this.refs.reportData[1].textContent = parseFloat((this.endTime - this.startTime) / 1000).toFixed(2);
+    this.refs.reportData[1].textContent = parseFloat(diff).toFixed(2);
     this.refs.playGround.classList.add('hide');
     this.refs.endReport.classList.remove('hide');
   }
   
   pause () {
     this.process = false;
+    this.endTime = Date.now();
     clearInterval(this.timerId);
     if (this.falling) {
       clearInterval(this.downTimerId);
@@ -192,7 +228,9 @@ class WordDown {
   }
   
   resume () {
+    console.log('game resume');
     this.process = true;
+    this.startTime = this.startTime + (Date.now() - this.endTime);
     this.timerId = setInterval(() => {
       this.increaseTime();
     }, 1000);
@@ -201,87 +239,152 @@ class WordDown {
         this.makeWordDown(this.refs.downWord);
       }, this.downSpeed);
     } else {
-      this.showTopic();
-      this.showOptions();
+      this.showWordTopic();
     }
   }
   
-  showTopic () {
-    if (this.topics.length < 5) {
-      this.fetchWords();
+  showWordTopic () {
+    if (this.wordObjects.length <= 5) {
+      this.requestTopics(this.showWordTopic);
+    } else {
+      // 加载音频
+      this.genWordAudio();
+      this.preLoadAudio();
+      
+      // 显示出当前掉落单词
+      this.curTopic = this.wordObjects.shift();
+      this.refs.downWord.textContent = this.curTopic.word;
+      this.refs.downWord.style.top = 0;
+      this.refs.downWord.classList.remove('hide');
+      this.falling = true;
+      
+      // 播放音频
+      this.curAudioEle = document.getElementById('audio' + this.curTopic.id);
+      this.playWordAudio();
+      
+      // 显示出选项
+      this.showOptions();
+      
+      // 开始掉落
+      this.downTimerId = setInterval(() => {
+        this.makeWordDown(this.refs.downWord);
+      }, this.downSpeed);
     }
-    this.curTopics = this.topics.pop();
-    this.refs.downWord.textContent = this.curTopics.topicContent.word;
-    this.refs.downWord.style.top = 0;
-    this.refs.downWord.classList.remove('hide');
-    this.falling = true;
-    this.showOptions();
-    this.downTimerId = setInterval(() => {
-      this.makeWordDown(this.refs.downWord);
-    }, this.downSpeed);
+  }
+  
+  genWordAudio () {
+    // 移除已经播放过的
+    if (this.curAudioEle) {
+      this.curAudioEle.removeEventListener('canplaythrough', this.playWordAudio.bind(this));
+      this.curAudioEle.parentElement.removeChild(this.curAudioEle);
+      this.curAudioEle = null;
+    }
+    for (let i = 0; i < 5 && i < this.wordObjects.length; ++i) {
+      let topicId = this.wordObjects[i].id;
+      let audioEle = document.getElementById('audio' + topicId);
+      if (audioEle == null) {
+        let audioSrc = this.wordObjects[i].audio_word;
+        audioEle = document.createElement('audio');
+        audioEle.id = 'audio' + topicId;
+        audioEle.src = audioSrc;
+        document.body.appendChild(audioEle);
+      }
+    }
+  }
+  
+  preLoadAudio () {
+    let audios = document.getElementsByTagName('audio');
+    console.log()
+    for (let i = 0; i < audios.length; ++i) {
+      if (!audios[i].hasAttribute('loaded')) {
+        audios[i].load();
+        audios[i].oncanplaythrough = (event) => {
+          audios[i].setAttribute('loaded', 'true');
+        };
+      }
+    }
   }
   
   showOptions () {
     // 取得选项，随机打乱
     const options = [];
-    options.push(this.curTopics.topicContent.wordMean);
-    options.push(this.curTopics.topicContent.optionMean1);
-    options.push(this.curTopics.topicContent.optionMean2);
+    options.push(this.curTopic.mean_word);
+    options.push(this.curTopic.option1);
+    options.push(this.curTopic.option2);
     randomSort(options);
     
     // 植入 DOM
     const length = this.refs.optionBoxes.length;
-    for (let i = 0, j = 0; i < length; ++i) {
+    for (let i = 0; i < length; ++i) {
       this.refs.optionBoxes[i].classList.remove('right');
       this.refs.optionBoxes[i].classList.remove('wrong');
-      this.refs.optionBoxes[i].textContent = options[j++];
+      this.refs.optionBoxes[i].textContent = options[i];
+    }
+  }
+  
+  playWordAudio () {
+    if (this.curAudioEle) {
+      this.curAudioEle.play();
     }
   }
   
   checkAnswer (optionNode) {
     // 掉落单词状态修改
-    if (this.falling) clearInterval(this.downTimerId);
+    if (this.falling) {
+      clearInterval(this.downTimerId);
+    }
     this.falling = false;
     this.refs.downWord.classList.add('hide');
     
-    // 检查答案
-    const word = this.curTopics.topicContent.word;
-    const wordMean = this.curTopics.topicContent.wordMean;
-    const right = (optionNode.textContent === wordMean);
-    
-    if (right) {
-      optionNode.classList.add('right');
-      this.increaseRightNum();
-    } else {
-      optionNode.classList.add('wrong');
-      // 将错误单词推回去
-      this.wordObjects.unshift(this.curTopics);
-      this.curTopics = null;
-      this.whenAnswerWrong();
-    }
+    // 检查答案, 显示正确释义
+    const word = this.curTopic.word;
+    const wordMean = this.curTopic.mean_word;
     this.refs.meanBox.textContent = word + ' = ' + wordMean;
+
+    const right = (optionNode.textContent === wordMean);
+    if (right) {
+      this.whenAnswerRight(optionNode);
+    } else {
+      this.whenAnswerWrong(optionNode);
+    }
+    
+    // 下一关
     this.nextStep();
   }
   
-  whenAnswerWrong () {
-    let originHeight = parseInt(this.refs.wrongBlock.style.height.replace('px', ''));
-    originHeight += 40;
-    this.liveHeight -= 40;
-    this.refs.wrongBlock.style.height = originHeight + 'px';
+  whenAnswerRight (optionNode) {
+    optionNode.classList.add('right');
+    this.increaseRightNum();
+    if (this.learned.indexOf(this.curTopic.id) === -1) {
+      this.learned.push(this.curTopic.id);
+    }
+  }
+  
+  whenAnswerWrong (optionNode) {
+    optionNode.classList.add('wrong');
+    // 改变 wrong Block 高度
+    let height = this.refs.wrongBlock.style.height;
+    height = parseInt(height.replace('px', '')) + this.rowHeight;
+    showAnimate(this.refs.wrongBlock, 'bounce-down');
+    this.refs.wrongBlock.style.height = height + 'px';
+    // 更新 liveHeight, 判断死亡
+    this.liveHeight -= this.rowHeight;
     if (this.liveHeight <= 5) {
       this.stop();
     }
   }
   
   nextStep () {
+    if (this.downSpeed > 100) {
+      this.downSpeed -= 5;
+    }
     if (this.process) {
       setTimeout(() => {
-        this.showTopic();
+        this.showWordTopic();
       }, 500);
     }
   }
 }
-
 
 window.onload = () => {
   const doms = {
@@ -306,7 +409,8 @@ window.onload = () => {
     reportData: document.querySelectorAll('.report-data'),
     replayBtn: document.getElementById('replay-btn')
   };
-  const game = new WordDown(doms, window.cet4Word);
-  game.init();
+  const game = new WordDown(doms);
+  game.prepare();
+  game.requestTopics();
 }
 

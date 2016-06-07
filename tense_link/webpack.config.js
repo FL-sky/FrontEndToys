@@ -1,15 +1,16 @@
 var path = require('path');
 var webpack = require('webpack');
+var autoprefixer = require('autoprefixer');
 
-var nodeDev = process.env.NODE_ENV;
-var production = nodeDev === 'production';
+var nodeEnv = process.env.NODE_ENV;
+var production = nodeEnv === 'production';
 
 var config = {
   entry: ['./src/index.js'],
   
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'word_down.js'
+    filename: 'tense_link.js'
   },
   
   module: {
@@ -24,18 +25,22 @@ var config = {
       },
       {
         test: /\.css$/,
-        loaders: ['style', 'css']
+        loaders: ['style', 'css', 'postcss']
       },
       {
         test: /\.less$/,
-        loaders: ['style', 'css', 'less']
+        loaders: ['style', 'css', 'postcss', 'less']
       },
       {
         test: /\.(png|jpg)$/,
-        loader: 'url?limit=8192'
+        loader: 'url?limit=8192&name=./img/[name].[ext]'
       }
     ]
   },
+
+  postcss: [
+    autoprefixer({ browsers: ['last 5 versions'] })
+  ],
   
   resolve: {
     extensions: ['', '.js', '.json']
@@ -52,7 +57,7 @@ if (production) {
   config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
 } else {
   config.entry.unshift(
-    'webpack-dev-server/client?http://localhost:8080/',
+    'webpack-dev-server/client?http://localhost:9000/',
     'webpack/hot/dev-server'
   );
 }
