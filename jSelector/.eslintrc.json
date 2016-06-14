@@ -6,6 +6,7 @@
     "rules": {
         "semi": 0,
         "new-cap": 0,
+        "no-unused-vars": 0,
         "quotes": ["error", "single"],
         "no-trailing-spaces": 0,
         "no-shadow-restricted-names": 0
