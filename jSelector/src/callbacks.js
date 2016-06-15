@@ -14,7 +14,7 @@ function createFlags (flags) {
   return object;
 }
 
-export default function Callbacks (flags) {
+export function Callbacks (flags) {
   flags = flags ? (flagsCache[flags] || createFlags(flags)) : {};
 
   // callback fn list
