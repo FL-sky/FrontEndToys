@@ -75,7 +75,7 @@
 	  var coreTrim = String.prototype.trim;
 
 	  // 正则表达式
-	  var rId = /^#[a-zA-Z0-9\-]+$/;
+	  var rId = /^#[\w\-]+$/;
 
 	  var jSelector = function jSelector(selector, context) {
 	    return new jSelector.prototype.init(selector, context);

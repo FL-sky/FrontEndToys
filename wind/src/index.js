@@ -5,7 +5,7 @@ import * as Callbacks from './Callbacks';
 (function (window, undefined) {
   let w = window;
   let document = w.document;
-  let rootjSelector;
+  let rootWind;
 
   // 简写引用的库方法
   let coreSlice = Array.prototype.slice;
@@ -13,14 +13,14 @@ import * as Callbacks from './Callbacks';
   let coreTrim = String.prototype.trim;
 
   // 正则表达式
-  const rId = /^#[a-zA-Z0-9\-]+$/;
+  const rId = /^#[\w\-]+$/;
 
-  let jSelector = function (selector, context) {
-    return new jSelector.prototype.init(selector, context);
+  let wind = function (selector, context) {
+    return new wind.prototype.init(selector, context);
   }
 
-  jSelector.fn = jSelector.prototype = {
-    constructor: jSelector,
+  wind.fn = wind.prototype = {
+    constructor: wind,
 
     // 选择器入口
     init: function (selector, context) {
@@ -86,7 +86,7 @@ import * as Callbacks from './Callbacks';
     },
 
     each: function (callback, args) {
-      return jSelector.each(this, callback, args);
+      return wind.each(this, callback, args);
     },
 
     ready: function (fn) {
@@ -96,10 +96,10 @@ import * as Callbacks from './Callbacks';
     pushStack: function (elems, name, selector) {
       let ret = this.constructor();
 
-      if (jSelector.isArray(elems)) {
+      if (wind.isArray(elems)) {
         this.push.apply(ret, elems);
       } else {
-        jSelector.merge(ret, elems);
+        wind.merge(ret, elems);
       }
 
       ret.context = this.context;
@@ -131,7 +131,7 @@ import * as Callbacks from './Callbacks';
     },
 
     map: function () {
-      return jSelector.map();
+      return wind.map();
     },
 
     push: [].push,
@@ -139,18 +139,18 @@ import * as Callbacks from './Callbacks';
     splice: [].splice
   }
 
-  jSelector.fn.init.prototype = jSelector.fn;
+  wind.fn.init.prototype = wind.fn;
   
   // extend
-  jSelector.extend = jSelector.fn.extend = function () {
+  wind.extend = wind.fn.extend = function () {
     let args = arguments[0] || {};
     for (let key in args) {
       this[key] = args[key];
     }
   }
 
-  // jSelector static fn
-  jSelector.extend({
+  // wind static fn
+  wind.extend({
     ready: function () {
       console.log('ready');
     },
@@ -160,10 +160,10 @@ import * as Callbacks from './Callbacks';
     }
   });
 
-  jSelector.extend(core);
-  jSelector.extend(Callbacks);
+  wind.extend(core);
+  wind.extend(Callbacks);
 
-  rootjSelector = jSelector(document);
+  rootWind = wind(document);
 
-  w.jSelector = w.$ = jSelector;
+  w.wind = w.$ = wind;
 })(window);
