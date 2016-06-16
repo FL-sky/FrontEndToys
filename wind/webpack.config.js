@@ -9,7 +9,7 @@ var config = {
   
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'jSelector.js'
+    filename: 'wind.js'
   },
   
   module: {

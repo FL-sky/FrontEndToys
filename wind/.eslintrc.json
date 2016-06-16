@@ -9,6 +9,7 @@
         "no-unused-vars": 0,
         "quotes": ["error", "single"],
         "no-trailing-spaces": 0,
-        "no-shadow-restricted-names": 0
+        "no-shadow-restricted-names": 0,
+        "no-unmodified-loop-condition": 0
     }
 }

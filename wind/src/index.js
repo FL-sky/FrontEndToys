@@ -1,5 +1,8 @@
 import * as core from './core';
-import * as Callbacks from './Callbacks';
+import * as css from './css';
+import * as attributes from './attributes';
+import * as manipulation from './manipulation';
+
 
 // 一切的入口，一个自调用匿名函数
 (function (window, undefined) {
@@ -78,6 +81,12 @@ import * as Callbacks from './Callbacks';
 
     toArray: function () {
       return Array.prototype.slice.call(this);
+    },
+
+    find: function (selector) {
+      if (!selector) return this;
+      let context = this.selector;
+      return wind(context + (context ? ' ' : '') + selector);
     },
 
     get: function (num) {
@@ -161,7 +170,9 @@ import * as Callbacks from './Callbacks';
   });
 
   wind.extend(core);
-  wind.extend(Callbacks);
+  wind.fn.extend(css);
+  wind.fn.extend(attributes);
+  wind.fn.extend(manipulation);
 
   rootWind = wind(document);
 
