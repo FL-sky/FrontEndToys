@@ -47,7 +47,6 @@ export function each (object, callback, args) {
   return object;
 }
 
-
 export function map (elems, callback, args) {
   let ret = [];
   let length = elems.length;
@@ -89,4 +88,11 @@ export function merge (first, second) {
   }
   first.length = i;
   return first;
+}
+
+export function matches (element, selector) {
+  let matches = element.matches || element.matchesSelector ||
+      element.webkitMatchesSelector || element.msMatchesSelector ||
+      element.mozMatchesSelector || element.oMatchesSelector;
+  return matches.call(element, selector);
 }

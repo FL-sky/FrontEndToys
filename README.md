@@ -2,7 +2,7 @@
 
 ### 1. wind
 
-山寨 jQuery, 学习ing
+山寨 jQuery, lodash 等工具库, 学习ing
 
 [代码点这里](./wind)
 
@@ -10,4 +10,14 @@
 - [ ] DOM 操作和遍历
 - [X] 属性操作
 - [ ] 事件系统
+- [ ] 更多 ......
+
+### 2. fakeVue
+
+仿 Vue 式 MVVM 框架，我的实现
+
+[代码点这里](./fakeVue)
+
+- [X] Observer
+- [X] Watcher
 - [ ] 更多 ......

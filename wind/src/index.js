@@ -1,6 +1,7 @@
 import * as core from './core';
 import * as css from './css';
 import * as attributes from './attributes';
+import * as traversing from './traversing';
 import * as manipulation from './manipulation';
 
 
@@ -113,9 +114,7 @@ import * as manipulation from './manipulation';
 
       ret.context = this.context;
 
-      if (name === 'find') {
-        ret.selector = `${this.selector}${this.selector ? ' ' : ''}${selector}`;
-      } else if (name) {
+      if (name) {
         ret.selector = `${this.selector}.${name}(${selector})`;
       }
       return ret;
@@ -172,6 +171,7 @@ import * as manipulation from './manipulation';
   wind.extend(core);
   wind.fn.extend(css);
   wind.fn.extend(attributes);
+  wind.fn.extend(traversing);
   wind.fn.extend(manipulation);
 
   rootWind = wind(document);
