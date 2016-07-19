@@ -1,0 +1,79 @@
+// preset params
+@grid-columns: 12;
+
+html, body {
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  background-color: #e0e0e0;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#app-root {
+  width: 100%;
+  text-align: center;
+}
+
+.clearFix() {
+  &::before,
+  &::after {
+    display: block;
+    content: " ";
+    clear: both;
+  }
+}
+
+.container {
+  height: 100%;
+  margin: 5px auto;
+  background-color: #fff;
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, .2);
+  .clearFix();
+}
+
+.row {
+  margin-left: -.1px;
+  margin-right: -.1px;
+  .clearFix();
+}
+
+.col-mixin(@name; @index: 1) when (@index =< @grid-columns) {
+  .col-@{name}-@{index} {
+    float: left;
+    position: relative;
+    width: (100% / 12 * @index);
+  }
+  .col-mixin(@name, (@index + 1));
+}
+
+@media print {
+  .container {
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .col-mixin(md);
+
+  .container {
+    width: 970px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .col-mixin(sm);
+
+  .container {
+    width: 750px;
+  }
+}
+
+
+.icon {
+  display: inline-block;
+}
