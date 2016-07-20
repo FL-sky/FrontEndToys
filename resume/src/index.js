@@ -2,17 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Header from './components/header';
 import Content from './components/content';
+import resumeData from '../data/resume.json';
 import './app.less';
-import './assets/FontAwesome/css/font-awesome.css';
 
-let App = () => {
-  return (
-    <div className="container">
-      <Header />
-      <Content />
-    </div>
-  );
-};
+const {
+  name, summary, contact, details,
+} = resumeData;
+
+let App = () => (
+  <div className="container">
+    <Header name={name} summary={summary} contact={contact} />
+    <Content details={details} />
+  </div>
+);
 
 ReactDOM.render(
   <App />,

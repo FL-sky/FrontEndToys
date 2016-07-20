@@ -28,6 +28,11 @@ var config = {
         },
       },
       {
+        test: /\.json$/,
+        exclude: /node_modules/,
+        loader: 'json',
+      },
+      {
         test: /\.css$/,
         loaders: ['style', 'css']
       },
@@ -43,7 +48,7 @@ var config = {
   },
 
   resolve: {
-    extensions: ['', '.js', 'jsx', '.json']
+    extensions: ['', '.js', 'jsx']
   },
   
   plugins: [

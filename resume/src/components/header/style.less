@@ -1,5 +1,6 @@
 @header-bg: #333;
 @header-font-color: #fff;
+@name-font-size: 70px;
 
 .clearFix() {
   &::before,
@@ -13,7 +14,7 @@
 header {
   text-align: left;
   background-color: @header-bg;
-  padding: 30px 45px;
+  padding: 20px 45px;
   color: @header-font-color;
 
 }
@@ -23,12 +24,13 @@ header figure {
   margin: 0;
 
   .title {
-    font-size: 70px;
+    font-size: @name-font-size;
     margin: 0;
 
     ~small {
       font-size: 20px;
       line-height: 150%;
+      display: block;
     }
   }
 }
@@ -39,17 +41,16 @@ header aside {
   ul {
     list-style: none;
     padding-left: 0;
-    margin: 5px auto;
+    margin: 10px 10px;
 
     li {
       line-height: 180%;
+      .clearFix();
     }
 
     .icon {
       width: 22px;
       font-size: 16px;
-      color: @header-font-color;
-      margin-left: -28px;
       color: #ccc;
     }
 
