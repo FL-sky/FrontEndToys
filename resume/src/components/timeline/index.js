@@ -18,7 +18,7 @@ export default class Timeline extends React.Component {
 
   renderItem(itemData, key) {
     const {
-      title, icon, duration, repo,
+      title, icon, duration, repo, demo,
       intro, description, honor,
     } = itemData;
     return (
@@ -31,6 +31,12 @@ export default class Timeline extends React.Component {
             <span className="repo">
               <FontAwesome className="icon" name="link" />
               <a href={repo}>源代码</a>
+            </span>
+          ) : null}
+          {demo ? (
+            <span className="repo">
+              <FontAwesome className="icon" name="link" />
+              <a href={demo}>Demo</a>
             </span>
           ) : null}
         </div>

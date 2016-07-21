@@ -65,6 +65,7 @@
             "intro": "参与百词斩针对于中学生的新 App 的开发，服务端基于**Ruby on Rails**, 客户端分为 Android / iOS 两个平台",
             "description": [
               "负责 Android 手机客户端上的复习, 语法课等模块的开发",
+              "在项目中整合百度地图 SDK, 完成定位和周边搜索的功能",
               "使用**Webpack**, **React**, **Less**完成部分前端页面开发, 整合入 Android 的**WebView**, 提升了开发效率"
             ]
           },
@@ -72,20 +73,23 @@
             "title": "简历生成器 (个人项目)",
             "icon": "male",
             "repo": "https://github.com/Raynxxx/FrontEndToys/tree/master/resume",
+            "demo": "http://raynxxx.github.io/resume",
             "description": [
               "这份简历的生成器",
-              "**React**实现, Webpack, Less 优化工作流",
+              "**React**实现, 使用 Webpack, Less 提升开发效率",
               "读取 json 格式数据，打包生成网页版的简历"
             ]
           },
           {
             "title": "ACM 爬虫 (个人项目)",
             "icon": "binoculars",
-            "repo": "https://github.com/Raynxxx/ACM-Spider", 
+            "repo": "https://github.com/Raynxxx/ACM-Spider",
+            "demo": "http://acm.cuit.edu.cn/status",
             "description": [
               "部署于 Linux 服务器上, 抓取 ACM 队员在 POJ，HDU，Codeforces 等主流 OnlineJudge 判题系统上的做题信息和代码，并保存在数据库中。",
               "在项目中担任主要开发人员，基于**Tornado**的异步网络库和队列，**MySQL**数据库",
-              "采用**Redis**解决去重问题"
+              "采用**Redis**解决去重问题",
+              "采用**jQuery**和**Bootstrap**开发前端页面，展示爬虫数据"
             ]
           },
           {
@@ -94,7 +98,8 @@
             "repo": "https://github.com/Raynxxx/JFlask", 
             "description": [
               "启发自 Python Flask 的轻量级 Java Web 框架",
-              "使用 Java 的注解完成 URL 配置，自动完成参数注入"
+              "基于**Servlet 3.0**, 兼容于 Tomcat, Jetty 等容器",
+              "MVC 架构, 使用 Java 的**注解**完成 URL 配置, 自动完成参数注入"
             ]
           }
         ]
@@ -131,17 +136,18 @@
               "熟悉**jQuery / Bootstrap**的使用、定制与扩展, 阅读过部分 jQuery 源代码",
               "熟悉**React / Vue**, 并运用在实际项目的开发中",
               "在项目中使用过**Less / PostCSS **等预处理/后处理工具",
-              "使用过如**Gulp，Webpack**相关前端开发打包构建工具，简化工作流"
+              "使用过如**Gulp，Webpack**相关前端开发打包构建工具，简化工作流和依赖管理"
             ]
           },
           {
             "title": "后端",
             "icon": "code",
             "description": [
-              "熟悉 **Java**, **Python**, 使用过 **Spring**, **Hibernate**, **Flask** 等框架搭建 Web 服务端",
+              "熟悉**Java**, **Python**, 使用过**Spring**, **Hibernate**, **Flask**等框架搭建 Web 服务端",
+              "有使用**MySQL**数据库，**Redis**缓存的经验",
               "熟悉常用的算法与数据结构，读过部分 C++ STL 源码",
               "了解异步 I/O 及事件驱动的服务器模型，掌握常见的**异步编程**解决方案",
-              "有三年的 Linux 使用经验，能编写简单的 Bash 脚本",
+              "有两年的 Linux 使用经验，能编写简单的 Bash 脚本",
               "了解**TCP/IP**协议, 以及**HTTP(1.x/2)**协议，以及常见 Web 安全知识 (XSS/CSRF 等)"
             ]
           },

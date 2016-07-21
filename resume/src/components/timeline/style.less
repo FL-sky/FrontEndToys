@@ -93,7 +93,8 @@
 
 @title-wrapper-height: 28px;
 @item-icon-size: 32px;
-@important-color: #009688;
+@item-icon-bg: #009688;
+@important-color: #00796B;
 
 li.timeline-item {
   margin-bottom: 15px;
@@ -114,7 +115,7 @@ li.timeline-item {
       text-align: center;
       border-radius: 100%;
       display: inline-block;
-      background-color: #009688;
+      background-color: @item-icon-bg;
 
       &:before {
         vertical-align: middle;
@@ -132,7 +133,7 @@ li.timeline-item {
     span.repo {
       line-height: @title-wrapper-height - 4px;
       display: inline-block;
-      background-color: #ddd;
+      background-color: #fff;
       padding: 0 5px;
       margin-top: 2px;
       margin-bottom: 2px;
@@ -157,6 +158,7 @@ li.timeline-item {
       padding: 3px 0 3px @timeline-left + 10px;
       color: #fff;
       line-height: @title-wrapper-height;
+      font-family: Tahoma,Helvetica;
     }
   }
 
