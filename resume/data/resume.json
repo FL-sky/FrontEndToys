@@ -3,6 +3,11 @@
   "summary": ["男 / 21岁 / 2017年应届毕业生", "前端工程师"],
   "contact": [
     {
+      "icon": "phone",
+      "name": "手机",
+      "show": "13198579718"
+    },
+    {
       "icon": "envelope",
       "name": "邮箱",
       "url": "mailto:rayn1027@outlook.com",
@@ -73,7 +78,7 @@
             "title": "简历生成器 (个人项目)",
             "icon": "male",
             "repo": "https://github.com/Raynxxx/FrontEndToys/tree/master/resume",
-            "demo": "http://raynxxx.github.io/resume",
+            "demo": "http://www.raynxxx.com/resume/",
             "description": [
               "这份简历的生成器",
               "**React**实现, 使用 Webpack, Less 提升开发效率",
@@ -135,7 +140,7 @@
               "熟悉原生**DOM / BOM API**的使用及相关标准, 了解常见的 Web API 兼容性问题及其解决方案",
               "熟悉**jQuery / Bootstrap**的使用、定制与扩展, 阅读过部分 jQuery 源代码",
               "熟悉**React / Vue**, 并运用在实际项目的开发中",
-              "在项目中使用过**Less / PostCSS **等预处理/后处理工具",
+              "在项目中使用过**Less / PostCSS**等预处理/后处理工具",
               "使用过如**Gulp，Webpack**相关前端开发打包构建工具，简化工作流和依赖管理"
             ]
           },

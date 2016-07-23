@@ -62,7 +62,19 @@ var config = {
 };
 
 if (production) {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
+  config.plugins.push(new webpack.DefinePlugin({
+    'process.env': {
+        NODE_ENV: JSON.stringify(nodeDev),
+    },
+  }));
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    output: {
+      comments: false,  // remove all comments
+    },
+    compress: {
+      warnings: false
+    }
+  }));
   config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
 } else {
   // for dev-server
