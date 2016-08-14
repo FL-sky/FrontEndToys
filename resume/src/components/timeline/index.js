@@ -24,18 +24,15 @@ export default class Timeline extends React.Component {
     return (
       <li key={key} className="timeline-item">
         <div className="title-wrapper">
-          <FontAwesome className="icon" name={icon} />
           <h4>{title}</h4>
           {duration ? <span className="duration">{duration}</span> : null}
           {repo ? (
             <span className="repo">
-              <FontAwesome className="icon" name="link" />
               <a href={repo}>源代码</a>
             </span>
           ) : null}
           {demo ? (
             <span className="repo">
-              <FontAwesome className="icon" name="link" />
               <a href={demo}>Demo</a>
             </span>
           ) : null}
@@ -69,8 +66,8 @@ export default class Timeline extends React.Component {
     return (
       <section className="timeline">
         <div className="timeline-header">
-          <FontAwesome className="icon" name={icon} />
-          <h3>{name}</h3>
+          <span className="icon">$</span>
+          <h3>~/{name}</h3>
         </div>
         <div className="timeline-body">
           <ul>

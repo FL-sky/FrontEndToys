@@ -1,11 +1,12 @@
 // preset params
 @grid-columns: 12;
+@bg: #a5a5a5;
 
 html, body {
   box-sizing: border-box;
   height: 100%;
   margin: 0;
-  background-color: #e0e0e0;
+  background-color: @bg;
 }
 
 * {
@@ -16,6 +17,7 @@ html, body {
 #app-root {
   width: 100%;
   text-align: center;
+
 }
 
 .clearFix() {
@@ -29,8 +31,7 @@ html, body {
 
 .container {
   height: 100%;
-  margin: 5px auto 0;
-  background-color: #fff;
+  margin: 5px auto 5px;
   .clearFix();
 }
 
@@ -72,6 +73,12 @@ html, body {
   }
 }
 
+@media (max-width: 768px) {
+  .container {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
 
 .icon {
   display: inline-block;

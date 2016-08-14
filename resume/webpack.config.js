@@ -95,7 +95,8 @@ if (production) {
     port: devPort,
     proxy: { /* todo */ },
     stats: {
-      colors: true
+      colors: true,
+      chunks: false
     }
   };
 }
