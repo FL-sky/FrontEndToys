@@ -40,7 +40,7 @@ header figure {
 
 header aside {
   float: right;
-  font-weight: 800;
+  font-weight: 300;
 
   ul {
     list-style: none;
@@ -50,6 +50,10 @@ header aside {
     li {
       line-height: 180%;
       .clearFix();
+    }
+
+    .icon, .tip {
+      font-weight: 100;
     }
 
     .icon {
@@ -64,6 +68,7 @@ header aside {
       margin: auto 3px;
       color: @header-font-color;
       font-size: @contact-font-size;
+      font: 12px/1 Tahoma,Helvetica;
     }
 
     a {
