@@ -15,6 +15,11 @@ var config = {
   module: {
     loaders: [
       {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+        exclude: /node_modules/
+      },
+      {
         test: /\.js$/,
         loader: 'babel',
         exclude: /node_modules/,
@@ -26,23 +31,46 @@ var config = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.json']
+    extensions: ['', '.js', '.json', '.ts']
   },
 
   plugins: [
     new webpack.NoErrorsPlugin()
-  ]
+  ],
+
+  devtool: 'source-map',
+  devServer: {
+    contentBase: path.resolve(__dirname, 'dist'),
+    hot: true,
+    inline: true,
+    host: '0.0.0.0',
+    port: 3000,
+    proxy: { /* todo */ },
+    stats: {
+      colors: true,
+      chunks: false
+    }
+  }
 
 };
 
 if (production) {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({ minimize: true }));
+  config.plugins.push(new webpack.DefinePlugin({
+    'process.env': {
+        NODE_ENV: JSON.stringify(nodeDev),
+    },
+  }));
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    output: { comments: false },
+    compress: { warnings: false }
+  }));
   config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin());
 } else {
   config.entry.unshift(
     'webpack-dev-server/client?http://localhost:3000/',
     'webpack/hot/dev-server'
   );
+  config.plugins.push(new webpack.HotModuleReplacementPlugin());
 }
 
 module.exports = config;

@@ -15,11 +15,13 @@
 ### 2. fakeVue
 
 仿 Vue 式 MVVM 框架，我的实现
+使用 Typescript
 
 [代码点这里](./fakeVue)
 
 - [X] Observer
 - [X] Watcher
+- [ ] Compile
 - [ ] 更多 ......
 
 ### 3. 个人简历生成器

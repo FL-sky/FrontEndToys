@@ -1,13 +1,19 @@
 import Dep from './dep';
+import Vue from './vue';
+
 /**
  * Watcher
  */
 export default class Watcher {
+  vm: Vue;
+  exp: string;
+  cb: Function;
+  data: any;
 
-  constructor (vm, expOrFn, cb) {
+  constructor (vm: Vue, exp: string, cb: Function) {
     this.cb = cb;
     this.vm = vm;
-    this.expOrFn = expOrFn;
+    this.exp = exp;
     this.data = this.get();
   }
 
@@ -16,7 +22,7 @@ export default class Watcher {
   }
 
   run () {
-    const data = this.get();
+    const data = this.vm._data[this.exp];
     if (data !== this.data) {
       this.data = data;
       this.cb.call(this.vm);
@@ -25,7 +31,7 @@ export default class Watcher {
 
   get () {
     Dep.target = this;
-    const val = this.vm._data[this.expOrFn];
+    const val = this.vm._data[this.exp];
     Dep.target = null;
     return val;
   }
