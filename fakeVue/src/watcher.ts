@@ -1,20 +1,32 @@
 import Dep from './dep';
 import Vue from './vue';
+import { object } from './type';
+import { getVMValue } from './directive';
 
 /**
  * Watcher
  */
 export default class Watcher {
+  deps: object;
   vm: Vue;
   exp: string;
-  cb: Function;
+  cb: any;
   data: any;
 
-  constructor (vm: Vue, exp: string, cb: Function) {
+  constructor (vm: Vue, exp: string, cb: any) {
+    this.deps = {};
     this.cb = cb;
     this.vm = vm;
     this.exp = exp;
     this.data = this.get();
+  }
+
+  addDep (dep: Dep) {
+    const id = dep.id.toString();
+    if (!this.deps.hasOwnProperty(id)) {
+      dep.addSubscriber(this);
+      this.deps[id] = dep;
+    }
   }
 
   update () {
@@ -22,16 +34,17 @@ export default class Watcher {
   }
 
   run () {
-    const data = this.vm._data[this.exp];
-    if (data !== this.data) {
-      this.data = data;
-      this.cb.call(this.vm);
+    const newData = this.get();
+    const oldData = this.data;
+    if (newData !== oldData) {
+      this.data = newData;
+      this.cb.call(this.vm, newData, oldData);
     }
   }
 
   get () {
     Dep.target = this;
-    const val = this.vm._data[this.exp];
+    const val = getVMValue(this.vm, this.exp);
     Dep.target = null;
     return val;
   }

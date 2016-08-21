@@ -3,20 +3,29 @@ import Watcher from './watcher';
 /**
  * Dep
  */
+let uid = 0;
+
 export default class Dep {
-  static target: Watcher;
-  subscriber: Array<Watcher>;
+  static target: Watcher = null;
+  id: number;
+  subscribers: Array<Watcher>;
 
   constructor () {
-    this.subscriber = [];
+    this.id = uid++;
+    this.subscribers = [];
+  }
+
+  depend () {
+    Dep.target.addDep(this);
   }
 
   addSubscriber (sub: Watcher) {
-    this.subscriber.push(sub);
+    this.subscribers.push(sub);
   }
 
   notify () {
-    this.subscriber.forEach(sub => sub.update());
+    console.log(this.subscribers);
+    this.subscribers.forEach(sub => sub.update());
   }
 
 }

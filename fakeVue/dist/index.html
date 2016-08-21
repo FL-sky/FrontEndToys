@@ -5,6 +5,24 @@
     <title>测试</title>
   </head>
   <body>
+    <div id="app">
+      <h2>{{ greeting }}</h2>
+      <input type="text" v-model="greeting">
+      <button v-on:click="reset">reset</button>
+    </div>
     <script type="text/javascript" src="./fake-vue.js"></script>
+    <script>
+      var v = new fakeVue({
+        el: '#app',
+        data: {
+          greeting: 'Hello World!',
+        },
+        methods: {
+          reset () {
+            this.greeting = 'Hello World!';
+          }
+        }
+      });
+    </script>
   </body>
 </html>

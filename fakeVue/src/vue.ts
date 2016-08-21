@@ -1,26 +1,35 @@
+import { object } from './type';
 import observe from './observe';
 import Watcher from './watcher';
+import Compile from './compile';
 
 /**
  * Vue
  */
 interface VueOption {
-  data: Object;
+  el: any;
+  data: object;
+  methods: object;
 }
 
-export default class Vue {
+export default class fakeVue {
   $option: VueOption;
-  _data: Object;
+  $compile: Compile;
+  _data: object;
   [key: string]: any;
 
   constructor (option: VueOption) {
     this.$option = option;
     let data = this._data = this.$option.data;
+
+    // data proxy
     Object.keys(data).forEach(key => this._proxy(key));
     observe(data);
+
+    this.$compile = new Compile(this.$option.el || document.body, this);
   }
 
-  $watch (exp: string, cb: Function) {
+  $watch (exp: string, cb: any) {
     let watcher = new Watcher(this, exp, cb);
     console.log('haha! watch ' + exp, watcher);
   }

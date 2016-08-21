@@ -1,17 +1,17 @@
 import Dep from './dep';
-
+import { object } from './type';
 /**
  * Observer
  */
 export class Observer {
   data: Object;
 
-  constructor (data: Object) {
+  constructor (data: object) {
     this.data = data;
     this.walk(data);
   }
 
-  walk (data: Object) {
+  walk (data: object) {
     Object.keys(data).forEach(key => {
       this.convert(key, data[key])
     });
@@ -23,7 +23,7 @@ export class Observer {
 }
 
 
-export function defineReactive (obj: Object, key: string, val: any) {
+export function defineReactive (obj: object, key: string, val: any) {
   let dep = new Dep();
   // recursive observe
   observe(val);
@@ -31,8 +31,8 @@ export function defineReactive (obj: Object, key: string, val: any) {
     enumerable: true,
     configurable: true,
     get: () => {
-      if (Dep.target) {
-        dep.addSubscriber(Dep.target);
+      if (Dep.target != null) {
+        dep.depend();
       }
       return val;
     },
@@ -41,6 +41,7 @@ export function defineReactive (obj: Object, key: string, val: any) {
       if (oldVal === newVal) {
         return;
       }
+      console.log('set: ', newVal);
       val = newVal;
       observe(newVal);
       dep.notify();
@@ -48,7 +49,7 @@ export function defineReactive (obj: Object, key: string, val: any) {
   })
 }
 
-export default function observe (data: Object) {
+export default function observe (data: object) {
   if (!data || typeof data !== 'object') {
     return;
   }
